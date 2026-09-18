@@ -9,11 +9,26 @@
 
 ## 推荐：扩展模式
 
-1. 打开 Chrome / Edge 的扩展管理页。
-2. 开启「开发者模式」。
-3. 选择「加载已解压的扩展程序」。
-4. 选择本仓库的 `chatgpt/extension` 目录。
-5. 点击扩展图标 **ChatGPT Codex Desktop**。
+### 直接下载插件包
+
+下载最新固定版本：
+
+[`chatgpt-codex-desktop-extension.zip`](https://github.com/frankichen/linuxdo-idea-ui/releases/download/chatgpt-codex-v0.1.0/chatgpt-codex-desktop-extension.zip)
+
+同时发布 SHA-256 校验文件：
+
+[`chatgpt-codex-desktop-extension.zip.sha256`](https://github.com/frankichen/linuxdo-idea-ui/releases/download/chatgpt-codex-v0.1.0/chatgpt-codex-desktop-extension.zip.sha256)
+
+安装：
+
+1. 下载 ZIP 并解压。
+2. 打开 Chrome / Edge 的扩展管理页。
+3. 开启「开发者模式」。
+4. 选择「加载已解压的扩展程序」。
+5. 选择刚才解压出的插件目录。
+6. 点击扩展图标 **ChatGPT Codex Desktop**。
+
+也可以直接克隆仓库后选择 `chatgpt/extension` 目录。
 
 扩展会打开最大化的 ChatGPT popup 窗口。这个窗口没有普通浏览器的标签栏 / 地址栏 / 书签栏。
 
