@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT · Codex Desktop 外观
 // @namespace    https://github.com/frankichen/linuxdo-idea-ui
-// @version      0.1.0
+// @version      0.1.1
 // @description  将 chatgpt.com 换成 Codex Desktop 风格。油猴版负责页面换肤；配套扩展可用无地址栏独立窗口，并在鼠标触顶时临时显示地址/书签工具栏。
 // @author       frankichen / based on czm15053 linuxdo-codex
 // @match        https://chatgpt.com/*
@@ -69,15 +69,13 @@
     }
     html.${ROOT} body {
       box-sizing: border-box !important;
-      height: 100vh !important;
+      min-height: 100vh !important;
       padding-top: var(--cgpt-frame-h) !important;
-      overflow: hidden !important;
       font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
     }
     html.${ROOT} body > #__next,
-    html.${ROOT} body > #root,
-    html.${ROOT} body > div:first-of-type {
-      height: calc(100vh - var(--cgpt-frame-h)) !important;
+    html.${ROOT} body > #root {
+      height: calc(100dvh - var(--cgpt-frame-h)) !important;
       min-height: 0 !important;
     }
     html.${ROOT} main { background: var(--cgpt-bg) !important; }
@@ -148,10 +146,10 @@
       box-shadow: 0 14px 40px rgba(0,0,0,.20); backdrop-filter: blur(18px);
       opacity: 0; transform: translateY(-12px); visibility: hidden;
       transition: opacity .14s ease, transform .14s ease, visibility .14s;
-      pointer-events: auto;
+      pointer-events: none;
     }
     html.${OPEN} #${SHELL_ID} .cgpt-tools {
-      opacity: 1; transform: translateY(0); visibility: visible;
+      opacity: 1; transform: translateY(0); visibility: visible; pointer-events: auto;
     }
     #${SHELL_ID} .cgpt-address-row { display: flex; align-items: center; gap: 6px; }
     #${SHELL_ID} .cgpt-address {
@@ -192,6 +190,20 @@
         resolve(null);
       }
     });
+  }
+
+  async function shouldActivate() {
+    if (!extensionMode()) return true;
+    const environment = await bridge({ type: "environment" });
+    return Boolean(environment && environment.ok && environment.windowType === "popup");
+  }
+
+  function deactivateShell() {
+    const html = document.documentElement;
+    if (html) html.classList.remove(ROOT, OPEN);
+    document.getElementById(STYLE_ID)?.remove();
+    document.getElementById(SHELL_ID)?.remove();
+    document.getElementById(HOT_ID)?.remove();
   }
 
   function injectStyle() {
@@ -384,8 +396,15 @@
     addEventListener("popstate", syncShell);
   }
 
-  function bootstrap() {
-    if (!document.documentElement) return requestAnimationFrame(bootstrap);
+  async function bootstrap() {
+    if (!document.documentElement) {
+      requestAnimationFrame(() => { void bootstrap(); });
+      return;
+    }
+    if (!(await shouldActivate())) {
+      deactivateShell();
+      return;
+    }
     document.documentElement.classList.add(ROOT);
     injectStyle();
     patchHistory();
@@ -400,5 +419,5 @@
     mount();
   }
 
-  bootstrap();
+  void bootstrap();
 })();
