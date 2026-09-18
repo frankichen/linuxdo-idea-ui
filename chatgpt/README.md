@@ -13,11 +13,11 @@
 
 下载最新固定版本：
 
-[`chatgpt-codex-desktop-extension.zip`](https://github.com/frankichen/linuxdo-idea-ui/releases/download/chatgpt-codex-v0.1.0/chatgpt-codex-desktop-extension.zip)
+[`chatgpt-codex-desktop-extension.zip`](https://github.com/frankichen/linuxdo-idea-ui/releases/latest/download/chatgpt-codex-desktop-extension.zip)
 
 同时发布 SHA-256 校验文件：
 
-[`chatgpt-codex-desktop-extension.zip.sha256`](https://github.com/frankichen/linuxdo-idea-ui/releases/download/chatgpt-codex-v0.1.0/chatgpt-codex-desktop-extension.zip.sha256)
+[`chatgpt-codex-desktop-extension.zip.sha256`](https://github.com/frankichen/linuxdo-idea-ui/releases/latest/download/chatgpt-codex-desktop-extension.zip.sha256)
 
 安装：
 
@@ -26,7 +26,9 @@
 3. 开启「开发者模式」。
 4. 选择「加载已解压的扩展程序」。
 5. 选择刚才解压出的插件目录。
-6. 点击扩展图标 **ChatGPT Codex Desktop**。
+6. 打开普通的 `chatgpt.com` 页面后，点击扩展图标 **ChatGPT Codex Desktop**。
+
+如果当前标签页就是 ChatGPT，扩展会把**当前标签页直接移动到 popup 独立窗口**，保留当前会话；如果当前页不是 ChatGPT，则打开上一次 ChatGPT 地址。普通浏览器标签页本身不会再注入 Codex 壳层，也不会出现第二套“假地址栏”。
 
 也可以直接克隆仓库后选择 `chatgpt/extension` 目录。
 
@@ -69,6 +71,15 @@ npm run check
 ```
 
 `npm run build` 从 `src/main.js` 同时生成 `../chatgpt-codex.user.js` 与 `extension/content.js`，两者共用同一份页面换肤与顶部工具栏实现。
+
+## v0.1.1 修复
+
+- 扩展内容脚本只在 `window.type === "popup"` 时启用；普通 ChatGPT 标签页保持原样。
+- 隐藏的临时工具层使用 `pointer-events: none`，不会形成透明点击遮罩。
+- 不再对 ChatGPT `body` 强制 `overflow: hidden`，也不再使用 `body > div:first-of-type` 这种宽泛选择器。
+- 点击扩展图标时，如果当前页就是 ChatGPT，会把当前标签页直接移动到 popup 窗口。
+
+从 v0.1.0 更新后，请在扩展管理页点一次“重新加载”，并刷新已经打开的 ChatGPT 普通标签页。
 
 ## 当前兼容策略
 

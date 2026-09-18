@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ChatGPT Codex Desktop",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Open ChatGPT in a Codex-style popup window with hidden browser chrome and an on-demand address/bookmarks shelf.",
   "permissions": ["bookmarks", "storage", "tabs", "windows"],
   "host_permissions": ["https://chatgpt.com/*"],

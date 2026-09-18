@@ -19,7 +19,10 @@ async function lastChatUrl(fallback) {
   const stored = await chrome.storage.local.get("lastChatUrl");
   return chatUrlOrNull(fallback) || chatUrlOrNull(stored.lastChatUrl) || DEFAULT_URL;
 }
-async function openApp(url) {
+async function openApp(url, tabId) {
+  if (Number.isInteger(tabId)) {
+    return chrome.windows.create({ tabId, type: "popup", focused: true, state: "maximized" });
+  }
   const target = await lastChatUrl(url);
   return chrome.windows.create({ url: target, type: "popup", focused: true, state: "maximized" });
 }
@@ -34,11 +37,25 @@ function flattenBookmarks(nodes, out, limit) {
   }
   return out;
 }
-chrome.action.onClicked.addListener((tab) => { openApp(tab && tab.url).catch(() => openApp()); });
+chrome.action.onClicked.addListener((tab) => {
+  const movableTabId = chatUrlOrNull(tab && tab.url) && Number.isInteger(tab && tab.id) ? tab.id : undefined;
+  openApp(tab && tab.url, movableTabId).catch(() => openApp());
+});
 chrome.commands.onCommand.addListener((command) => { if (command === "open-codex-chatgpt") openApp(); });
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   (async () => {
     if (!message || typeof message.type !== "string") return { ok: false };
+    if (message.type === "environment") {
+      const windowId = sender.tab && sender.tab.windowId;
+      if (typeof windowId !== "number") return { ok: false, windowType: "unknown" };
+      const current = await chrome.windows.get(windowId);
+      return {
+        ok: true,
+        windowType: current.type || "unknown",
+        windowId,
+        tabId: sender.tab && sender.tab.id
+      };
+    }
     if (message.type === "page-url") {
       const url = safeChatUrl(message.url);
       await chrome.storage.local.set({ lastChatUrl: url });
