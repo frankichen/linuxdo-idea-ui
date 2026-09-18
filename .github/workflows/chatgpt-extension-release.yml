@@ -1,0 +1,43 @@
+name: Package ChatGPT Codex Extension
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  package-extension:
+    if: startsWith(github.event.release.tag_name, 'chatgpt-codex-v')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Verify generated extension sources
+        run: npm --prefix chatgpt test
+
+      - name: Build downloadable extension zip
+        shell: bash
+        run: |
+          rm -rf dist
+          mkdir -p dist
+          (
+            cd chatgpt/extension
+            zip -r ../../dist/chatgpt-codex-desktop-extension.zip . -x '*.DS_Store'
+          )
+          sha256sum dist/chatgpt-codex-desktop-extension.zip > dist/chatgpt-codex-desktop-extension.zip.sha256
+
+      - name: Upload release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          gh release upload "$TAG" \
+            dist/chatgpt-codex-desktop-extension.zip \
+            dist/chatgpt-codex-desktop-extension.zip.sha256 \
+            --clobber
