@@ -1,0 +1,10 @@
+{
+  "name": "linuxdo-idea-ui-root-checks",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Repository-level validation entry point for CI.",
+  "scripts": {
+    "check": "npm --prefix chatgpt run check",
+    "test": "npm --prefix chatgpt test"
+  }
+}
