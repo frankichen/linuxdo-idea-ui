@@ -301,7 +301,7 @@
             <button type="button" data-action="forward" title="前进">→</button>
             <button type="button" data-action="reload" title="刷新">↻</button>
           </div>
-          <input class="cgpt-address" aria-label="地址" spellcheck="false" />
+          <input id="cgpt-codex-address" name="cgpt-codex-address" class="cgpt-address" aria-label="地址" spellcheck="false" />
           <button type="button" data-action="copy" title="复制地址">⧉</button>
           <button type="button" data-action="normal" title="在普通浏览器窗口打开">◱</button>
         </div>
