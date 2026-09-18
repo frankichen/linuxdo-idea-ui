@@ -1,11 +1,13 @@
 "use strict";
 const DEFAULT_URL = "https://chatgpt.com/";
-function safeChatUrl(value) {
+function chatUrlOrNull(value) {
   try {
-    const url = new URL(value || DEFAULT_URL);
-    if (url.protocol !== "https:" || url.hostname !== "chatgpt.com") return DEFAULT_URL;
-    return url.href;
-  } catch { return DEFAULT_URL; }
+    const url = new URL(value || "");
+    return url.protocol === "https:" && url.hostname === "chatgpt.com" ? url.href : null;
+  } catch { return null; }
+}
+function safeChatUrl(value) {
+  return chatUrlOrNull(value) || DEFAULT_URL;
 }
 function safeWebUrl(value) {
   try {
@@ -15,7 +17,7 @@ function safeWebUrl(value) {
 }
 async function lastChatUrl(fallback) {
   const stored = await chrome.storage.local.get("lastChatUrl");
-  return safeChatUrl(fallback || stored.lastChatUrl || DEFAULT_URL);
+  return chatUrlOrNull(fallback) || chatUrlOrNull(stored.lastChatUrl) || DEFAULT_URL;
 }
 async function openApp(url) {
   const target = await lastChatUrl(url);
