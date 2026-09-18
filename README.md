@@ -281,6 +281,10 @@ https://github.com/czm15053/linuxdo-idea-ui/raw/main/linuxdo-codex.user.js
 
 新增 [`chatgpt-codex.user.js`](./chatgpt-codex.user.js) 和 [`chatgpt/extension`](./chatgpt/extension/)：
 
+**插件 ZIP 直接下载：** [`chatgpt-codex-desktop-extension.zip`](https://github.com/frankichen/linuxdo-idea-ui/releases/download/chatgpt-codex-v0.1.0/chatgpt-codex-desktop-extension.zip)
+
+下载后解压，在 Chrome / Edge 的扩展管理页开启「开发者模式」，选择「加载已解压的扩展程序」并指向解压目录。
+
 - 油猴脚本：把 `chatgpt.com` 换成 Codex Desktop 风格，保留 ChatGPT 原生数据和交互。
 - Chrome / Edge 扩展：用无普通地址栏/标签栏的 popup 独立窗口打开 ChatGPT。
 - 鼠标触碰窗口最顶部 3px，临时滑出地址栏 + 浏览器书签；离开后自动收起。
