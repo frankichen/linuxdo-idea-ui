@@ -10,6 +10,7 @@ const source = await readFile(resolve(root, "src/main.js"), "utf8");
 const userscript = await readFile(resolve(root, "dist/chatgpt-codex.user.js"), "utf8");
 const content = await readFile(resolve(root, "extension/content.js"), "utf8");
 const manifest = JSON.parse(await readFile(resolve(root, "extension/manifest.json"), "utf8"));
+const background = await readFile(resolve(root, "extension/background.js"), "utf8");
 
 let rootUserscript = null;
 try {
@@ -33,5 +34,13 @@ if (!manifest.permissions.includes("bookmarks")) fail("bookmarks permission miss
 if (!manifest.permissions.includes("windows")) fail("windows permission missing");
 if (!manifest.host_permissions.includes("https://chatgpt.com/*")) fail("chatgpt host permission missing");
 if (/fetch\s*\(/.test(source)) fail("skin source must not intercept or call ChatGPT network APIs");
+if (!source.includes('type: "environment"')) fail("extension environment gate missing");
+if (!source.includes('environment.windowType === "popup"')) fail("extension must activate only in popup windows");
+if (!background.includes('message.type === "environment"')) fail("background environment responder missing");
+if (!background.includes('chrome.windows.create({ tabId, type: "popup"')) fail("current ChatGPT tab must move into popup mode");
+if (source.includes("body > div:first-of-type")) fail("broad ChatGPT root selector can break page interaction");
+if (source.includes("overflow: hidden !important")) fail("global body overflow lock can break ChatGPT interaction");
+if (!source.includes("visibility: hidden;\n      transition: opacity .14s ease, transform .14s ease, visibility .14s;\n      pointer-events: none;")) fail("hidden tools must not capture pointer events");
+if (manifest.version !== "0.1.1") fail("extension version must be 0.1.1");
 
 if (!process.exitCode) console.log("self-check passed");
