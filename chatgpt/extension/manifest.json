@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "ChatGPT Codex Desktop",
+  "version": "0.1.0",
+  "description": "Open ChatGPT in a Codex-style popup window with hidden browser chrome and an on-demand address/bookmarks shelf.",
+  "permissions": ["bookmarks", "storage", "tabs", "windows"],
+  "host_permissions": ["https://chatgpt.com/*"],
+  "action": { "default_title": "Open ChatGPT as Codex" },
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    { "matches": ["https://chatgpt.com/*"], "js": ["content.js"], "run_at": "document_start" }
+  ],
+  "commands": {
+    "open-codex-chatgpt": {
+      "suggested_key": { "default": "Ctrl+Shift+Period", "mac": "Command+Shift+Period" },
+      "description": "Open ChatGPT in Codex app window"
+    }
+  }
+}

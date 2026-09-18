@@ -1,0 +1,12 @@
+{
+  "name": "chatgpt-codex-desktop-ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "ChatGPT Codex Desktop skin plus optional Chromium app-shell extension",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/self-check.mjs",
+    "test": "npm run build && npm run check"
+  }
+}
